@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>交易记录</title>
+</head>
+<body>
+<h1>交易记录</h1>  当前积分:1000000
+<br/>
+   {% for alltx in alltxs %}
+   <table width="95%" border="1" cellpadding="2" cellspacing="1">
+   <tr><td>交易ID</td><td>{{alltx['Record']['tx_id']}}</td></tr>
+   <tr><td>版权哈希</td><td>{{alltx['Record']['copyright']}}</td></tr>
+   <tr><td>版本号</td><td>{{alltx['Record']['version']}}</td></tr>
+   <tr><td>花费积分</td><td>{{alltx['Record']['out'][0]['value']}}</td></tr>
+   <tr><td>收款账号</td><td>{{alltx['Record']['out'][0]['certificate']}}</td></tr>
+   <tr><td>时间戳</td><td>{{alltx['Record']['time']}}</td></tr>
+   </table>
+   <br/>
+   {% endfor %}
+</body>
+</html>

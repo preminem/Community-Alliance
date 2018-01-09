@@ -1,0 +1,21 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+services:
+
+  peer0.org2.example.com:
+    container_name: peer0.org2.example.com
+    environment:
+     - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+     - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=10.0.2.14:5984
+     - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+     - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=password
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.org2.example.com
+    extra_hosts:
+     - "orderer.example.com:101.201.211.174"

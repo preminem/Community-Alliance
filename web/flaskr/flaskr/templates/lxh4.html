@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>交易结果信息</title>
+</head>
+<body>
+<h1>交易成功！</h1><a href="/transactionrecord">交易记录</a>  当前积分:999990
+<table width="95%" border="1" cellpadding="2" cellspacing="1">
+   {% if True %}
+   <tr><td>交易ID</td><td>{{tx['tx_id']}}</td></tr>
+   <tr><td>版权哈希</td><td>{{tx['copyright']}}</td></tr>
+   <tr><td>版本号</td><td>{{tx['version']}}</td></tr>
+   <tr><td>话费积分</td><td>{{tx['out'][0]['value']}}</td></tr>
+   <tr><td>对方账号</td><td>{{tx['out'][0]['certificate']}}</td></tr>
+   {% endif %}
+</table>
+</body>
+</html>

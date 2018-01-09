@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>搜索话题</title>
+</head>
+<body>
+<h1>数据资产交易平台</h1><a href="/transactionrecord">交易记录</a>  当前积分:1000000
+<form action="/query" method="post">
+            <p>话题关键字：<input type="text" name="name"/></p>
+            <input type="submit" value="搜索">
+
+        </form>
+<table width="95%" border="1" cellpadding="2" cellspacing="1">
+   <tr><td>id</td><td>题目</td></tr>
+   {% for post in posts %}
+   
+   <tr><td>{{ post['Record']['id'] }}</td><td><a href=/topic/{{post['Record']['id']}}>{{ post['Record']['title'] }}</a></td></tr>
+   {% endfor %}
+</table>
+</body>
+</html>

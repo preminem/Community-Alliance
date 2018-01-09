@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>话题详情</title>
+</head>
+<body>
+<h1>话题详情</h1><a href="/transactionrecord">交易记录</a>  当前积分:1000000
+<table width="95%" border="1" cellpadding="2" cellspacing="1">
+    <tr><td>话题id</td><td>话题题目</td><td>话题内容</td></tr>
+   {% if True %}
+   <tr><td>{{ _post['id'] }}</td><td>{{ _post['title'] }}</td><td>{{ _post['content'] }}</td></tr>
+   {% endif %}
+</table>
+<br/>
+ <table width="95%" border="1" cellpadding="2" cellspacing="1">
+   <tr><td>评论id</td><td>评论内容</td></tr>
+   {% for post in posts %}
+   <tr><td>{{ post['Record']['id'] }}</td><td><a href=/reply/{{post['Record']['id']}}>{{ post['Record']['content'] }}</a></td></tr>
+   {% endfor %}
+</table>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>评论详情</title>
+</head>
+<body>
+<h1>评论详情</h1><a href="/transactionrecord">交易记录</a>  当前积分:1000000
+<table width="95%" border="1" cellpadding="2" cellspacing="1">
+   {% if True %}
+   <tr><td>源话题题目</td><td>{{post[0]['Record']['title']}}</td></tr>
+   <tr><td>源话题内容</td><td>{{post[0]['Record']['content']}}</td></tr>
+   <tr><td>源话题标签</td><td>{{post[0]['Record']['labels']}}</td></tr>
+   <tr><td>源话题提供</td><td>{{post[0]['Record']['originalwebsite']}}</td></tr>
+   <tr><td>评论ID</td><td>{{_post['id']}}</td></tr>
+   <tr><td>评论内容</td><td>{{_post['content']}}</td></tr>
+   <tr><td>回复时间</td><td>{{_post['publishtime']}}</td></tr>
+   <tr><td>作者ID</td><td>{{_post['authorid']}}</td></tr>
+   <tr><td>点赞数</td><td>{{_post['star_num']}}</td></tr>
+   <tr><td>价格</td><td>10</td></tr>
+   {% endif %}
+</table>
+<input type="button"  value="购买" onClick="location.href='/reply/buy/{{_post['id']}}'" style="height:50px; width:200px;"/>
+</body>
+</html>
