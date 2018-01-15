@@ -40,10 +40,10 @@ function restartNetwork() {
 	rm -rf /tmp/hfc-test-kvs_peerOrg* $HOME/.hfc-key-store/ /tmp/fabric-client-kvs_peerOrg*
 
 	#Start the network
-	docker run -p 5984:5984 -d --name couchdb0 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=password -v ~/couchdb0:/opt/couchdb/data klaemo/couchdb 
-	docker run -p 6984:5984 -d --name couchdb1 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=password -v ~/couchdb1:/opt/couchdb/data klaemo/couchdb 
-	docker run -p 7984:5984 -d --name couchdb2 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=password -v ~/couchdb2:/opt/couchdb/data klaemo/couchdb 
-	docker run -p 8984:5984 -d --name couchdb3 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=password -v ~/couchdb3:/opt/couchdb/data klaemo/couchdb
+	#docker run -p 5984:5984 -d --name couchdb0 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=password -v ~/couchdb0:/opt/couchdb/data klaemo/couchdb 
+	#docker run -p 6984:5984 -d --name couchdb1 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=password -v ~/couchdb1:/opt/couchdb/data klaemo/couchdb 
+	#docker run -p 7984:5984 -d --name couchdb2 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=password -v ~/couchdb2:/opt/couchdb/data klaemo/couchdb 
+	#docker run -p 8984:5984 -d --name couchdb3 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=password -v ~/couchdb3:/opt/couchdb/data klaemo/couchdb
 	docker-compose up -d
 	cd -
 	echo
