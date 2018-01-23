@@ -345,9 +345,9 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName/transaction', functio
 		return;
 	}
 
-	query.queryChaincode('peer1', channelName, 'mycc', args, 'queryPost', req.username, req.orgname)
-	.then(function(data) {
-		return copyrightTransaction.copyrightTransaction(peers, channelName, chaincodeName, fcn, data, req.username, req.orgname)
+	Promise.all([query.queryChaincode('peer1', channelName, 'mycc', args, 'queryPost', req.username, req.orgname), query.queryChaincode('peer1', channelName, 'urcc', [''], 'getInput', req.username, req.orgname)])
+    .then(function(values) {
+		return copyrightTransaction.copyrightTransaction(peers, channelName, chaincodeName, fcn, values[0], values[1], req.username, req.orgname)
 	}).then(function(message) {
 		res.send(message);
 	});

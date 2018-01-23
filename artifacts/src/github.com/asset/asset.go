@@ -10,6 +10,8 @@ import (
     "math/big"
     "time"
     "bytes"
+    "strings"
+    "strconv"
    
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -242,47 +244,84 @@ func (s *SmartContract) queryAllTransaction(APIstub shim.ChaincodeStubInterface)
 }
 
 func (s *SmartContract) getInput(APIstub shim.ChaincodeStubInterface) sc.Response {
-    queryString := fmt.Sprintf("{\"selector\":{\"use\":false}}")
+    creatorByte,_:= APIstub.GetCreator()
+    certStart := bytes.IndexAny(creatorByte, "-----BEGIN")
+    if certStart == -1 {
+       return shim.Error("No certificate found")
+    }
+    certText := creatorByte[certStart:]
+    certstring := string(certText)
+    certstring = strings.Replace(certstring, "\n", "\\n", -1)
+
+    queryString := fmt.Sprintf("{\"selector\":{\"$and\":[{\"use\":false},{\"out.0.certificate\":\"%s\"}]}}",certstring)
     resultsIterator, err := APIstub.GetQueryResult(queryString)
     if err != nil {
         return shim.Error(err.Error())
     }
     defer resultsIterator.Close()
  
-    var buffer bytes.Buffer
-    buffer.WriteString("[")
- 
-    bArrayMemberAlreadyWritten := false
+    if(resultsIterator.HasNext()) {
+        queryResponse, err := resultsIterator.Next()
+        if err != nil {
+            return shim.Error(err.Error())
+        }
+        inputResult := In{Hash:queryResponse.Key, Index:0}
+        inputAsBytes, _ := json.Marshal(inputResult)
+        return shim.Success(inputAsBytes)
+    }   
+    queryString = fmt.Sprintf("{\"selector\":{\"$and\":[{\"use\":false},{\"out.1.certificate\":\"%s\"}]}}",certstring)
+    resultsIterator, err = APIstub.GetQueryResult(queryString)
+    if err != nil {
+        return shim.Error(err.Error())
+    }
+    if(resultsIterator.HasNext()) {
+        queryResponse, err := resultsIterator.Next()
+        if err != nil {
+            return shim.Error(err.Error())
+        }
+        inputResult := In{Hash:queryResponse.Key, Index:1}
+        inputAsBytes, _ := json.Marshal(inputResult)
+        return shim.Success(inputAsBytes)
+    }
+    return shim.Error("Account balance is not enough！")
+}
+
+func (s *SmartContract) queryBalance(APIstub shim.ChaincodeStubInterface) sc.Response {
+    creatorByte,_:= APIstub.GetCreator()
+    certStart := bytes.IndexAny(creatorByte, "-----BEGIN")
+    if certStart == -1 {
+       return shim.Error("No certificate found")
+    }
+    certText := creatorByte[certStart:]
+    certstring := string(certText)
+    _certstring := strings.Replace(certstring, "\n", "\\n", -1)
+
+    var balance int = 0
+
+    queryString := fmt.Sprintf("{\"selector\":{\"$and\":[{\"use\":false},{\"$or\":[{\"out.0.certificate\":\"%s\"},{\"out.1.certificate\":\"%s\"}]}]}}",_certstring,_certstring)
+    resultsIterator, err := APIstub.GetQueryResult(queryString)
+    if err != nil {
+        return shim.Error(err.Error())
+    }
+    defer resultsIterator.Close()
     for resultsIterator.HasNext() {
         queryResponse, err := resultsIterator.Next()
         if err != nil {
             return shim.Error(err.Error())
         }
-         
-        if bArrayMemberAlreadyWritten == true {
-            buffer.WriteString(",")
+        var tx TransactionData
+        err = json.Unmarshal(queryResponse.Value, &tx)
+        if err != nil {
+            return shim.Error("Transaction Contract err !")
         }
-        buffer.WriteString("{\"Key\":")
-        buffer.WriteString("\"")
-        buffer.WriteString(queryResponse.Key)
-        buffer.WriteString("\"")
- 
-        buffer.WriteString(", \"Record\":")
-         
-        buffer.WriteString(string(queryResponse.Value))
-        buffer.WriteString("}")
-        bArrayMemberAlreadyWritten = true
-    }
-    buffer.WriteString("]")
- 
-    fmt.Printf("- queryAllTransaction:\n%s\n", buffer.String())
- 
-    return shim.Success(buffer.Bytes())
-}
-
-func (s *SmartContract) queryBalance(APIstub shim.ChaincodeStubInterface) sc.Response {
-    a := "10000"
-    return shim.Success([]byte(a)) 
+        if tx.Out[0].Certificate == certstring {
+            balance += tx.Out[0].Value
+        }
+        if tx.Out[1].Certificate == certstring {
+            balance += tx.Out[1].Value
+        }      
+    }      
+    return shim.Success([]byte(strconv.Itoa(balance))) 
 }
 
 func main() {

@@ -221,6 +221,15 @@ curl -s -X GET \
 echo
 echo
 
+echo "GET query current user balance  on peer1 of Org1"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/chaincodes/urcc?peer=peer1&fcn=queryBalance&args=%5B%22%22%5D" \
+  -H "authorization: Bearer $ORG1_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
 echo "GET query Block by blockNumber"
 echo
 curl -s -X GET \

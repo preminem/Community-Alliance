@@ -26,7 +26,7 @@ var ORGS = hfc.getConfigSetting('network-config');
 const asn1 = require('asn1.js');
 var crypto = require('crypto')
 
-var copyrightTransaction = function(peerNames, channelName, chaincodeName, fcn, data, username, org) {
+var copyrightTransaction = function(peerNames, channelName, chaincodeName, fcn, data, inputResult, username, org) {
 	logger.debug(util.format('\n============ invoke copyright transaction on organization %s ============\n', org));
 
 var cryptoContent = helper.getKey(username,org);
@@ -38,13 +38,15 @@ var datastring = JSON.stringify(data);
 var sha256 = crypto.createHash('sha256');
 sha256.update(datastring);
 var copyright = sha256.digest('hex');
+//解析input
+var input = JSON.parse(inputResult)
 //生成tx_id
 var unhash_tx_id = {"tx_id": "", 
      "copyright": copyright,
      "version": "1.0",
      "tx_in_count": 1,
      "tx_out_count": 2,
-     "in":[{"hash":"Jim","index":0,"scriptsig_r":"","scriptsig_s":""}],
+     "in":[{"hash":input.hash,"index":input.index,"scriptsig_r":"","scriptsig_s":""}],
      "out":[{"value":10,"certificate":"abcd"},{"value":999990,"certificate":cer}]
     };
 var string = JSON.stringify(unhash_tx_id);
@@ -73,7 +75,7 @@ var endtransaction = {"tx_id": txid,
      "version": "1.0",
      "tx_in_count": 1,
      "tx_out_count": 2,
-     "in":[{"hash":"Jim","index":0,"scriptsig_r":rsSig.r.toString(),"scriptsig_s":rsSig.s.toString()}],
+     "in":[{"hash":input.hash,"index":input.index,"scriptsig_r":rsSig.r.toString(),"scriptsig_s":rsSig.s.toString()}],
      "out":[{"value":10,"certificate":"abcd"},{"value":999990,"certificate":cer}]
     };
 var transactionstring = JSON.stringify(endtransaction);

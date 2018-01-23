@@ -258,7 +258,6 @@ var getRegisteredUsers = function(username, userOrg, isJson) {
 				secret: user._enrollmentSecret,
 				message: username + ' enrolled Successfully',
 			};
-			console.log('fuck!!!!!!!'+user);
 			return response;
 		}
 		return user;
