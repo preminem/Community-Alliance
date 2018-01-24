@@ -44,11 +44,21 @@ var instantiateChaincode = function(channelName, chaincodeName, chaincodeVersion
 	}).then((success) => {
 		tx_id = client.newTransactionID();
 		// send proposal to endorser
+		var endorsementpolicy = {
+		  identities: [
+		    { role: { name: "member", mspId: "org1" }},
+		    { role: { name: "member", mspId: "org2" }}
+		  ],
+		  policy: {
+		    "2-of": [{ "signed-by": 0 }, { "signed-by": 1 }]
+		  }
+		}
 		var request = {
 			chaincodeId: chaincodeName,
 			chaincodeVersion: chaincodeVersion,
 			args: [''],
-			txId: tx_id
+			txId: tx_id,
+			endorsement: endorsementpolicy
 		};
 
 		if (functionName)
