@@ -344,10 +344,12 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName/transaction', functio
 		res.json(getErrorMessage('\'args\''));
 		return;
 	}
-
-	Promise.all([query.queryChaincode('peer1', channelName, 'mycc', args, 'queryPost', req.username, req.orgname), query.queryChaincode('peer1', channelName, 'urcc', [''], 'getInput', req.username, req.orgname)])
+    
+    //发起交易前要做三件事。1.获取帖子信息 2.选择input 3.查询余额）
+    //还未完善（1.发起交易前未检验几个查询是否成功 2.如何指定对方证书，考虑加入帖子字段）
+	Promise.all([query.queryChaincode('peer1', channelName, 'mycc', args, 'queryPost', req.username, req.orgname), query.queryChaincode('peer1', channelName, 'urcc', [''], 'getInput', req.username, req.orgname), query.queryChaincode('peer1', channelName, 'urcc', [''], 'queryBalance', req.username, req.orgname)])
     .then(function(values) {
-		return copyrightTransaction.copyrightTransaction(peers, channelName, chaincodeName, fcn, values[0], values[1], req.username, req.orgname)
+		return copyrightTransaction.copyrightTransaction(peers, channelName, chaincodeName, fcn, values[0], values[1], values[2], req.username, req.orgname)
 	}).then(function(message) {
 		res.send(message);
 	});
