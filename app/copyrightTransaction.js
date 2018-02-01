@@ -76,7 +76,7 @@ var endtransaction = {"tx_id": txid,
      "tx_in_count": 1,
      "tx_out_count": 2,
      "in":[{"hash":input.hash,"index":input.index,"scriptsig_r":rsSig.r.toString(),"scriptsig_s":rsSig.s.toString()}],
-     "out":[{"value":10,"certificate":"abcd"},{"value":999990,"certificate":cer}]
+     "out":[{"value":10,"certificate":"abcd"},{"value":balance - 10,"certificate":cer}]
     };
 var transactionstring = JSON.stringify(endtransaction);
 
